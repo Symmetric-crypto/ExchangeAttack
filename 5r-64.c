@@ -15,7 +15,7 @@ The code is modifed to imeplement the small-scale variant of AES (AES-64)
  5 rounds distinguisher for AES
  
  For 5-round of AES-64, the probability of having right pairs are 2^{-12.19-14}=2^{-26.19}
- if we choose |P1|=|P2|=2^7, we can contruct 2^{13}.2^{13}=2^{26} pairs.
+ if we choose |m1|=|m2|=2^7, we can contruct 2^{13}.2^{13}=2^{26} pairs.
  
  author: Navid Ghaedi Bardeh
 */
@@ -24,8 +24,8 @@ The code is modifed to imeplement the small-scale variant of AES (AES-64)
 #include <string.h>
 #include <math.h>
 #define Round 5
-#define setA 128    //|P1|
-#define setB 128    //|P2|
+#define setA 128    //|m1|
+#define setB 128    //|m2|
 #define Ntest 10
 
 typedef unsigned char word8;
@@ -254,7 +254,8 @@ unsigned int AEScase(word8 key[][4]){
 		sa[0][i] =randomByte();
 	for(i=0;i<4;i++)
 		sb[0][i] =randomByte();
-	//choose random texts for set A
+	
+	//choose random values for set A
 	for(i=1; i<setA ;i++){
 		do{
 			flag1 = 0;
@@ -279,7 +280,7 @@ unsigned int AEScase(word8 key[][4]){
 			}
 		}while(flag1 == 1);
 	}
-	//choose random texts for set B
+	//choose random values for set B
 	for(i=1; i<setB ;i++){
 		do{
 			flag1 = 0;
@@ -304,7 +305,7 @@ unsigned int AEScase(word8 key[][4]){
 			}
 		}while(flag1 == 1);
 	}
-	// contruct plaintexts
+	// contruct  m1.m2  plaintexts
 	for(m=0;m<setA;m++){
 		for(m1=0;m1<setB;m1++){
 			
@@ -332,18 +333,21 @@ unsigned int AEScase(word8 key[][4]){
 	
 	counter=0;
 	counter1=0;
-	// contruct  plaintexts pairs
+	// contruct 2^{26} ciphertext pairs
 	for(m=0;m<setA;m++){
 		for(m1=m+1;m1<setA;m1++){
 			for(m2=0;m2<setB;m2++){
 				for(m3=m2+1;m3<setB;m3++){
-				
+			
+					// check for first collision
 					for(i=0; i<4 ;i++)
 						for(j=0; j<4 ;j++)
 							test[i][j] = ci[m][m2][4*i+j] ^ ci[m1][m3][4*i+j];
+					
 					coset=CheckColumns(test);
 					if (coset){
 						counter++;
+						// check for second collision, just swap the first index between the pair (equals to swap the first diagonal between their plaintexts)
 						for(i=0; i<4 ;i++)
 							for(j=0; j<4 ;j++)
 								test1[i][j] = ci[m1][m2][4*i+j] ^ ci[m][m3][4*i+j];
@@ -356,7 +360,7 @@ unsigned int AEScase(word8 key[][4]){
 								for(i=0; i<4 ;i++)
 									for(j=0; j<4 ;j++)
 										test3[i][j]=ci[m1][m3][4*i+j] ;
-								printf("New pair\n");
+								printf("right pairs \n");
 								printf("C1:\n");
 								Print(test2);
 								printf("C2:\n");
@@ -433,7 +437,7 @@ unsigned int Randomcase(word8 key[][4]){
 		sa[0][i] =randomByte();
 	for(i=0;i<4;i++)
 		sb[0][i] =randomByte();
-	//choose random texts for set A
+	//choose random values for set A
 	for(i=1; i<setA ;i++){
 		do{
 			flag1 = 0;
@@ -458,7 +462,7 @@ unsigned int Randomcase(word8 key[][4]){
 			}
 		}while(flag1 == 1);
 	}
-	//choose random texts for set B
+	//choose random values for set B
 	for(i=1; i<setB ;i++){
 		do{
 			flag1 = 0;
