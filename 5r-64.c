@@ -568,12 +568,13 @@ int main() {
 	counter=0;
 	counter1=0;
 	for( i=0; i< Ntest; i++){
+		printf("\nTest number: %d\n",i+1);
 		counter+=AEScase(key);
 		counter1+=Randomcase(key);
 	}
 	printf("\n\n");
-	printf("Total number of the right pairs in AES case: %d \n",counter);
-	printf("Total number of the right pairs in Random case %d \n",counter1);
+	printf("After %d tests, total number of the right pairs in AES case: %d  \n",Ntest,counter);
+	printf("After %d tests, total number of the right pairs in Random case %d \n", Ntest,counter1);
 	
 }
 
