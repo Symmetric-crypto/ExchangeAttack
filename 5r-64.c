@@ -17,7 +17,6 @@ The code is modifed to imeplement the small-scale variant of AES (AES-64)
  For 5-round of AES-64, the probability of having right pairs are 2^{-12.19-14}=2^{-26.19}
  if we choose |m1|=|m2|=2^7, we can contruct 2^{13}.2^{13}=2^{26} pairs.
  
- author: Navid Ghaedi Bardeh
 */
 #include <stdio.h>
 #include <stdlib.h>
